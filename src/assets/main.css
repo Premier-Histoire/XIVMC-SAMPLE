@@ -1,0 +1,18 @@
+@import './base.css';
+
+@font-face {
+  font-family: 'NotoSansJP';
+  src: url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;700&display=swap') format('truetype');
+}
+
+#app {
+  font-family: "Noto Sans JP", sans-serif;
+  width: calc(100% - 70px);
+  height: calc(100vh - 70px);
+  margin: 35px 35px;
+  overflow: hidden;
+}
+
+body {
+  min-height: 0 !important;
+}
