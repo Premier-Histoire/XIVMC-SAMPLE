@@ -4,38 +4,38 @@
       <Search @send-data="SearchItems" />
     </div>
     <div class="result-box">
-      <div v-for="item in searchResults" :key="item" @click="selectItem(item)">
-        <img :src="item.iconUrl" alt="アイコン" class="item-icon" loading="lazy">
-        <div class="item-info">
-          <div class="item-name">{{ item.Name }}</div>
-          <div v-if="item.isCraftable" class="item-craftable"><img class="craft"
-              src="https://xivapi.com/cj/1/blacksmith.png"></div>
+      <div class="result-header">
+        <div class="result-img">
+          <img v-if="searchinfo.id !== undefined" :src="`/src/assets/img/${this.searchinfo.id}.png`">
+        </div>
+        <div :class="{ 'result-text': true, 'freesearch-text': searchinfo.id === undefined }">{{ this.searchinfo.text }}
+        </div>
+      </div>
+      <div class="result-items scroll_bar">
+        <div class="result-item" v-for="(item, index) in searchResults" :key="item" @click="selectItem(item)"
+          :class="{ 'last-item': index === searchResults.length - 1 }" >
+          <div class="item-icon">
+            <img :src="item.iconUrl" loading="lazy">
+          </div>
+          <div class="result-name">{{ item.Name }}</div>
+          <div v-if="item.isCraftable" class="item-craftable">
+            <img clss="" src="./assets/img/craft.png">
+          </div>
         </div>
       </div>
     </div>
-  </div>
-
-  <!-- Modal -->
-  <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-xl">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h1 class="modal-title fs-5" id="exampleModalLabel">詳細</h1>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-          ...
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        </div>
+    <div class="info-box">
+      <div class="info-header">
+        <div class="info-text">詳細情報</div>
       </div>
+      <Info :info="selectedInfo" />
     </div>
   </div>
 </template>
 
 <script>
 import Search from './components/Search.vue'
+import Info from './components/Info.vue'
 
 export default {
   data() {
@@ -44,13 +44,15 @@ export default {
       infoLoading: false,
       isSelectBoxOpen: false,
       selectedServer: '',
-      selectedInfo: null,
+      selectedInfo: [],
       searchResults: [],
       searchQuery: '',
+      searchinfo: [],
     }
   },
   components: {
-    Search
+    Search,
+    Info
   },
   created() {
     this.loadJsonData();
@@ -86,25 +88,35 @@ export default {
       const formattedImageId = imageId.toString().padStart(6, '0'); // 画像IDを6桁でフォーマット
       return `https://xivapi.com/i/0${baseId}/${formattedImageId}.png`; // 完全なURLを生成
     },
+    getIconHRUrl(imageId) {
+      const baseId = Math.floor(imageId / 1000) * 1000; // 1万の位を基にベースIDを算出
+      const formattedImageId = imageId.toString().padStart(6, '0'); // 画像IDを6桁でフォーマット
+      return `https://xivapi.com/i/0${baseId}/${formattedImageId}_hr1.png`; // 完全なURLを生成
+    },
     isCraftable(itemKey) {
       return this.recipeData.some(recipe => recipe.ItemResult === itemKey);
     },
     ItemSearch(searchQuery) {
+      this.selectedInfo = [],
+      this.searchinfo.id = undefined;
+      this.searchinfo.text = '検索';
       try {
         this.searchResults = this.itemsData.filter(item =>
           item.Name.includes(searchQuery)
         ).map(item => ({
           ...item,
           iconUrl: this.getIconUrl(item.Icon),
+          iconHrUrl: this.getIconHRUrl(item.Icon),
           isCraftable: this.isCraftable(item.ItemId)
-        }));
-        console.log(this.searchResults);
+        }))
       } catch (error) {
         console.error('検索エラー:', error);
       }
     },
-    FilterSearch(typeId, data, level, job) {
-      console.log(this.itemsData);
+    FilterSearch(typeId, data, text, level, job) {
+      this.selectedInfo = [],
+      this.searchinfo.id = data;
+      this.searchinfo.text = text
       let selectedJobId; // selectedJobId を定義する
 
       try {
@@ -123,9 +135,9 @@ export default {
         }).map(item => ({
           ...item,
           iconUrl: this.getIconUrl(item.Icon),
+          iconHrUrl: this.getIconHRUrl(item.Icon),
           isCraftable: this.isCraftable(item.ItemId)
         }));
-        console.log(this.searchResults);
       } catch (error) {
         console.error('検索エラー:', error);
       }
@@ -140,6 +152,10 @@ export default {
       }
       return matchingIds;
     },
+    selectItem(item){
+      this.selectedInfo = item
+      console.log(this.selectedInfo)
+    }
   }
 }
 </script>
@@ -148,77 +164,111 @@ export default {
 .contents {
   width: 100%;
   height: 100%;
-  background-color: #313031;
-  border: 1px solid black;
+  background-color: #313131;
   border-radius: 10px;
   display: flex;
 }
 
 .search-box {
   width: 300px;
-  margin: 2.5px;
-  border-radius: 5px 0 0 5px;
-  padding: 0 10px 0 10px;
-  border-right: 1px solid white;
-}
-
-.result-box {
-  flex: 1;
-  margin: 2.5px;
-  border-radius: 0 5px 5px 0;
+  padding: 0 12.5px 0 12.5px;
+  border-right: 2px solid #555455;
 }
 
 .modal-body {
   height: 70vh;
 }
 
-/* 検索結果ボックス */
 .result-box {
-  display: flex;
-  flex-direction: column; /* 縦の行並びにする */
-  width: 700px;
-  max-height: 400px; /* 最大の高さを設定し、高さが超えた場合にスクロールする */
-  overflow-y: auto; /* 縦方向のスクロールバーを表示する */
-}
-
-/* アイテム */
-.item {
+  flex: 2;
   display: flex;
   align-items: center;
-  margin-bottom: 10px;
+  flex-direction: column;
+  overflow-y: auto;
+  border-right: 2px solid #555455;
+}
+
+.result-header {
+  width: 100%;
+  height: 31px;
+  background: repeat url("./assets/img/header.png");
+  display: flex;
+}
+
+.result-img img {
+  width: 20px;
+  height: 20px;
+  margin: auto 10px auto 10px;
+}
+
+.result-text {
+  margin: auto 0 auto 0;
+  font-size: 15px;
+  color: #CFB47A;
+}
+
+.freesearch-text {
+  margin-left: 40px;
+}
+
+.result-items {
+  width: calc(100% - 15px);
+  height: calc(100% - 31px);
+  padding: 8px 10px 10px 10px;
+  margin-right: 10px;
   cursor: pointer;
 }
 
-/* アイコン */
-.item-icon {
-  width: 50px;
-  height: 50px;
-  margin-right: 10px;
-}
-
-/* アイテム情報 */
-.item-info {
+.result-item {
   display: flex;
-  flex-direction: row; /* アイコンとテキストを横に並べる */
-  align-items: center; /* 縦方向の中央揃え */
+  width: 100%;
+  align-items: center;
+  margin-bottom: 10px;
 }
 
-/* クラフトアイコン */
-.craft {
+.last-item {
+  margin-bottom: 0;
+}
+
+.item-icon {
+  width: 40px;
+  height: 40px;
+  margin-right: 10px;
+  background-color: black;
+  border-radius: 5px;
+}
+
+.result-name {
+  margin: 0;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  color: white;
+}
+
+.item-craftable {
   width: 20px;
   height: 20px;
-  margin-left: 5px; /* アイコンとテキストの間に適切な間隔を設定 */
+  display: flex;
+  align-items: center;
 }
 
-/* アイテム名 */
-.item-name {
-  font-weight: bold;
+.info-box {
+  flex: 3;
 }
 
-/* クラフト可能アイコン */
-.item-craftable {
-  margin-top: 5px;
+.info-header {
+  width: 100%;
+  height: 31px;
+  background: repeat url("./assets/img/header.png");
+  border-radius: 0 5px 0 0;
+  display: flex;
 }
 
-
+.info-text {
+  margin: auto 0 auto 0;
+  font-size: 15px;
+  color: #CFB47A;
+  margin-left: 30px;
+}
 </style>
