@@ -6,7 +6,7 @@
     <div class="result-box">
       <div class="result-header">
         <div class="result-img">
-          <img v-if="searchinfo.id !== undefined" :src="`/src/assets/img/${this.searchinfo.id}.png`">
+          <img v-if="searchinfo.id !== undefined" :src="`/assets/img/${this.searchinfo.id}.png`">
         </div>
         <div :class="{ 'result-text': true, 'freesearch-text': searchinfo.id === undefined }">{{ this.searchinfo.text }}
         </div>
