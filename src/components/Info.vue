@@ -1,12 +1,12 @@
 <template>
-    <div v-if="info.Name !== undefined" class="detail-info">
-        <div class="info-img">
+    <div class="detail-info">
+        <div v-if="info.Name !== undefined" class="info-img">
             <img :src="info.iconHrUrl" alt="アイコン" loading="lazy">
         </div>
-        <div class="info-name">
+        <div v-if="info.Name !== undefined" class="info-name">
             {{ info.Name }}
         </div>
-        <div class="info-clip" @click="copyToClipboard" data-bs-toggle="tooltip" data-bs-placement="top"
+        <div v-if="info.Name !== undefined" class="info-clip" @click="copyToClipboard" data-bs-toggle="tooltip" data-bs-placement="top"
             data-bs-custom-class="custom-tooltip" data-offset="0, 10" title="アイテム名をコピーします。">
             <i class="far fa-copy fa-lg"></i>
         </div>
