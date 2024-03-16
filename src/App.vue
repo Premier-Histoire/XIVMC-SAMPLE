@@ -6,14 +6,14 @@
     <div class="result-box">
       <div class="result-header">
         <div class="result-img">
-          <img v-if="searchinfo.id !== undefined" :src="`../src/assets/img/${searchinfo.id}.png`">
+          <img v-if="searchinfo.id !== undefined" :src="imageSrc">
         </div>
         <div :class="{ 'result-text': true, 'freesearch-text': searchinfo.id === undefined }">{{ this.searchinfo.text }}
         </div>
       </div>
       <div class="result-items scroll_bar">
         <div class="result-item" v-for="(item, index) in searchResults" :key="item" @click="selectItem(item)"
-          :class="{ 'last-item': index === searchResults.length - 1 }" >
+          :class="{ 'last-item': index === searchResults.length - 1 }">
           <div class="item-icon">
             <img :src="item.iconUrl" loading="lazy">
           </div>
@@ -48,6 +48,7 @@ export default {
       searchResults: [],
       searchQuery: '',
       searchinfo: [],
+      imageSrc: '',
     }
   },
   components: {
@@ -83,6 +84,11 @@ export default {
         this.ItemSearch(data)
       }
     },
+    async getImagePath(variable) {
+      // 画像のパスを動的に読み込む
+      const imageModule = await import(`@/assets/img/${variable}.png`);
+      this.imageSrc = imageModule.default;
+    },
     getIconUrl(imageId) {
       const baseId = Math.floor(imageId / 1000) * 1000; // 1万の位を基にベースIDを算出
       const formattedImageId = imageId.toString().padStart(6, '0'); // 画像IDを6桁でフォーマット
@@ -98,7 +104,7 @@ export default {
     },
     ItemSearch(searchQuery) {
       this.selectedInfo = [],
-      this.searchinfo.id = undefined;
+        this.searchinfo.id = undefined;
       this.searchinfo.text = '検索';
       try {
         this.searchResults = this.itemsData.filter(item =>
@@ -116,7 +122,8 @@ export default {
     FilterSearch(typeId, data, text, level, job) {
       this.selectedInfo = [],
       this.searchinfo.id = data;
-      this.searchinfo.text = text
+      this.searchinfo.text = text;
+      this.getImagePath(data);
       let selectedJobId; // selectedJobId を定義する
 
       try {
@@ -152,7 +159,7 @@ export default {
       }
       return matchingIds;
     },
-    selectItem(item){
+    selectItem(item) {
       this.selectedInfo = item
       console.log(this.selectedInfo)
     }
