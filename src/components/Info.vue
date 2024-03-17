@@ -12,6 +12,21 @@
                 <i class="far fa-copy fa-lg"></i>
             </div>
         </div>
+        <div class="toggle">
+            <div class="material-info">
+                <div class="toggle-button toggle-left"
+                    :class="{ 'button-on': activeButton === 1, 'button-off': activeButton !== 1 }"
+                    @click="toggleButton(1)">素材情報
+                </div>
+            </div>
+            <div class="marketprice-info">
+                <div class="toggle-button toggle-right"
+                    :class="{ 'button-on': activeButton === 2, 'button-off': activeButton !== 2 }"
+                    @click="toggleButton(2)">相場情報
+                </div>
+            </div>
+        </div>
+
         <div class="details">
 
         </div>
@@ -25,6 +40,11 @@ export default {
     props: {
         info: Object,
     },
+    data() {
+        return {
+            activeButton: 1
+        }
+    },
     mounted() {
         new Tooltip(document.body, {
             selector: "[data-bs-toggle='tooltip']",
@@ -36,19 +56,23 @@ export default {
             if (navigator.clipboard) {
                 navigator.clipboard.writeText(itemName)
                     .then(() => {
-                        // コピー成功時の処理
                         console.log('テキストがクリップボードにコピーされました: ', itemName);
                         alert('テキストがクリップボードにコピーされました');
                     })
                     .catch(err => {
-                        // クリップボードへのアクセスが拒否された場合などのエラー処理
                         console.error('クリップボードへのアクセスが拒否されました: ', err);
                         alert('クリップボードへのアクセスが拒否されました');
                     });
             } else {
-                // クリップボードAPIがサポートされていない場合の処理
                 console.error('クリップボードAPIがサポートされていません');
                 alert('クリップボードAPIがサポートされていません');
+            }
+        },
+        toggleButton(buttonNumber) {
+            if (buttonNumber === 1) {
+                this.activeButton = 1;
+            } else if (buttonNumber === 2) {
+                this.activeButton = 2;
             }
         }
     }
@@ -93,6 +117,55 @@ export default {
     margin-left: 15px;
     color: white;
     cursor: pointer;
+}
+
+.toggle {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: row;
+}
+
+.toggle-left {
+    margin-left: auto;
+    margin-right: -2.5px;
+}
+
+.toggle-right {
+    margin-right: auto;
+    margin-left: -2.5px;
+}
+
+.material-info {
+    flex: 1;
+    text-align: right;
+}
+
+.marketprice-info {
+    flex: 1;
+    text-align: left;
+}
+
+.toggle-button {
+    width: 250px;
+    height: 26px;
+    cursor: pointer;
+    text-align: center;
+    font-size: 12px;
+    line-height: 26px;
+    color: white;
+}
+
+.button-on {
+    background-image: url('../assets/img/button-on.png');
+    background-size: 250px 26px;
+    background-color: transparent;
+}
+
+.button-off {
+    background-image: url('../assets/img/button-off.png');
+    background-size: 250px 26px;
+    background-color: transparent;
 }
 
 .details {

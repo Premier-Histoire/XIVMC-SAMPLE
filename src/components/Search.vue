@@ -572,7 +572,7 @@ export default {
 .button-container {
     display: grid;
     grid-template-columns: repeat(10, 20px);
-    gap: 6px;
+    gap: 6.5px;
     margin-bottom: 6.6px;
 }
 

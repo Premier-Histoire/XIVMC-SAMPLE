@@ -279,6 +279,7 @@ export default {
   flex: 1;
   display: flex;
   align-items: center;
+  font-size: 12px;
   color: white;
   cursor: pointer;
 }
