@@ -28,7 +28,16 @@
         </div>
 
         <div class="details">
-
+            <div v-if="activeButton === 1">
+                <!-- 素材情報の表示 -->
+                <!-- 例えば、以下に素材情報のコンテンツを記述 -->
+                <p>ここに素材情報が表示されます。</p>
+            </div>
+            <div v-else-if="activeButton === 2">
+                <!-- 相場情報の表示 -->
+                <!-- 例えば、以下に相場情報のコンテンツを記述 -->
+                <p>ここに相場情報が表示されます。</p>
+            </div>
         </div>
     </div>
 </template>
@@ -172,5 +181,6 @@ export default {
     width: calc(100% - 6px);
     height: calc(100vh - 195px);
     background-color: rgb(70, 95, 95, 0.3);
+    color: white;
 }
 </style>
