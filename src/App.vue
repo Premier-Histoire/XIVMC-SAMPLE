@@ -12,19 +12,24 @@
         </div>
       </div>
       <div class="result-items scroll_bar">
-        <div class="result-item" v-for="(item, index) in searchResults" :key="item" @click="selectItem(item)"
-          :class="{ 'last-item': index === searchResults.length - 1 }">
-          <div class="item-icon">
-            <img :src="item.iconUrl" loading="lazy">
-          </div>
-          <div class="result-name">{{ item.Name }}</div>
-          <div class="loadstone">
-            <a :href="'https://jp.finalfantasyxiv.com/lodestone/playguide/db/item/' + item.loadstoneid" class="eorzeadb_link" target="_blank">
-              <img src="./assets/img/lodestone.png">
-            </a>
-          </div>
-          <div class="item-craftable">
-            <img v-if="item.isCraftable" src="./assets/img/craft.png">
+        <div class="result-margin">
+          <div class="result-itemlist scroll_bar">
+            <div class="result-item" v-for="(item, index) in searchResults" :key="item" @click="selectItem(item)"
+              :class="{ 'last-item': index === searchResults.length - 1 }">
+              <div class="item-icon">
+                <img :src="item.iconUrl" loading="lazy">
+              </div>
+              <div class="result-name">{{ item.Name }}</div>
+              <div class="loadstone">
+                <a :href="'https://jp.finalfantasyxiv.com/lodestone/playguide/db/item/' + item.loadstoneid"
+                  class="eorzeadb_link" target="_blank">
+                  <img src="./assets/img/lodestone.png">
+                </a>
+              </div>
+              <div class="item-craftable">
+                <img v-if="item.isCraftable" src="./assets/img/craft.png">
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -177,14 +182,21 @@ export default {
 .contents {
   width: 100%;
   height: 100%;
-  background-color: #313131;
-  border-radius: 10px;
   display: flex;
+  border-image-source: url(./assets/img/bordergate.png);
+  border-image-slice: 100 fill;
+  border-image-width: 100px;
+  border-image-outset: 0px;
+  border-image-repeat: round;
 }
 
 .search-box {
   width: 300px;
-  padding: 0 12.5px 0 12.5px;
+  padding: 5px 0 10px 12.5px;
+  margin-right: 12.5px;
+}
+
+.search-border {
   border-right: 2px solid #555455;
 }
 
@@ -197,13 +209,18 @@ export default {
   display: flex;
   align-items: center;
   flex-direction: column;
-  overflow-y: auto;
-  border-right: 2px solid #555455;
+}
+
+.result-margin {
+  width: calc(100% - 20px);
+  height: calc(100% - 20px);
+  margin: 10px 10px 10px 10px;
 }
 
 .result-header {
   width: 100%;
   height: 31px;
+  margin-top: 5px;
   background: repeat url("./assets/img/header.png");
   display: flex;
 }
@@ -225,10 +242,17 @@ export default {
 }
 
 .result-items {
-  width: calc(100% - 15px);
+  width: 100%;
   height: calc(100% - 31px);
-  padding: 8px 10px 10px 10px;
-  margin-right: 10px;
+  margin-bottom: 8px;
+  border-left: 2px solid #555455;
+}
+
+.result-itemlist {
+  height: 100%;
+  overflow-y: scroll;
+  margin-top: 10px;
+  margin-bottom: 10px;
 }
 
 .result-item {
@@ -262,6 +286,7 @@ export default {
 .item-craftable {
   width: 20px;
   height: 20px;
+  margin-right: 10px;
   display: flex;
   align-items: center;
 }
@@ -278,10 +303,10 @@ export default {
 }
 
 .info-header {
-  width: 100%;
+  width: calc(100% - 6.5px);
   height: 31px;
+  margin-top: 5px;
   background: repeat url("./assets/img/header.png");
-  border-radius: 0 5px 0 0;
   display: flex;
 }
 
