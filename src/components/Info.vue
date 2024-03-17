@@ -1,18 +1,20 @@
 <template>
-    <div class="detail-info">
-        <div v-if="info.Name !== undefined" class="info-img">
-            <img :src="info.iconHrUrl" alt="アイコン" loading="lazy">
+    <div class="info">
+        <div class="detail-info">
+            <div v-if="info.Name !== undefined" class="info-img">
+                <img :src="info.iconHrUrl" alt="アイコン" loading="lazy">
+            </div>
+            <div v-if="info.Name !== undefined" class="info-name">
+                {{ info.Name }}
+            </div>
+            <div v-if="info.Name !== undefined" class="info-clip" @click="copyToClipboard" data-bs-toggle="tooltip"
+                data-bs-placement="top" data-bs-custom-class="custom-tooltip" data-offset="0, 10" title="アイテム名をコピーします。">
+                <i class="far fa-copy fa-lg"></i>
+            </div>
         </div>
-        <div v-if="info.Name !== undefined" class="info-name">
-            {{ info.Name }}
-        </div>
-        <div v-if="info.Name !== undefined" class="info-clip" @click="copyToClipboard" data-bs-toggle="tooltip" data-bs-placement="top"
-            data-bs-custom-class="custom-tooltip" data-offset="0, 10" title="アイテム名をコピーします。">
-            <i class="far fa-copy fa-lg"></i>
-        </div>
-    </div>
-    <div class="details">
+        <div class="details">
 
+        </div>
     </div>
 </template>
 
@@ -54,6 +56,12 @@ export default {
 </script>
 
 <style>
+.info {
+    display: flex;
+    flex-direction: column;
+    border-left: 2px solid #555455;
+}
+
 .detail-info {
     display: flex;
     align-items: center;
@@ -88,9 +96,8 @@ export default {
 }
 
 .details {
-    width: 100%;
-    height: calc(100% - 111px);
-    border-radius: 0 0 10px 0;
+    width: calc(100% - 6px);
+    height: calc(100vh - 195px);
     background-color: rgb(70, 95, 95, 0.3);
 }
 </style>
