@@ -18,8 +18,13 @@
             <img :src="item.iconUrl" loading="lazy">
           </div>
           <div class="result-name">{{ item.Name }}</div>
-          <div v-if="item.isCraftable" class="item-craftable">
-            <img clss="" src="./assets/img/craft.png">
+          <div class="loadstone">
+            <a :href="'https://jp.finalfantasyxiv.com/lodestone/playguide/db/item/' + item.loadstoneid" class="eorzeadb_link" target="_blank">
+              <img src="./assets/img/lodestone.png">
+            </a>
+          </div>
+          <div class="item-craftable">
+            <img v-if="item.isCraftable" src="./assets/img/craft.png">
           </div>
         </div>
       </div>
@@ -121,7 +126,7 @@ export default {
     },
     FilterSearch(typeId, data, text, level, job) {
       this.selectedInfo = [],
-      this.searchinfo.id = data;
+        this.searchinfo.id = data;
       this.searchinfo.text = text;
       this.getImagePath(data);
       let selectedJobId; // selectedJobId を定義する
@@ -145,6 +150,7 @@ export default {
           iconHrUrl: this.getIconHRUrl(item.Icon),
           isCraftable: this.isCraftable(item.ItemId)
         }));
+        console.log(this.searchResults)
       } catch (error) {
         console.error('検索エラー:', error);
       }
@@ -162,7 +168,7 @@ export default {
     selectItem(item) {
       this.selectedInfo = item
       console.log(this.selectedInfo)
-    }
+    },
   }
 }
 </script>
@@ -223,7 +229,6 @@ export default {
   height: calc(100% - 31px);
   padding: 8px 10px 10px 10px;
   margin-right: 10px;
-  cursor: pointer;
 }
 
 .result-item {
@@ -251,6 +256,7 @@ export default {
   display: flex;
   align-items: center;
   color: white;
+  cursor: pointer;
 }
 
 .item-craftable {
@@ -258,6 +264,13 @@ export default {
   height: 20px;
   display: flex;
   align-items: center;
+}
+
+.loadstone img {
+  width: 20px;
+  height: 20px;
+  margin-right: 10px;
+  overflow: visible;
 }
 
 .info-box {
